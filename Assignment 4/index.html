@@ -1,10 +1,182 @@
-<!doctype html>
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2017 by bahanson
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Untitled Document</title>
-</head>
+<meta name="description" content="[JSBIN Assignment 4]">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Assignment 4</title>
+<style id="jsbin-css">
+h1 { 
+    display: block;
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
 
+.container {
+    position: relative;
+}
+
+.title{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    display: block;
+    font-size: 1.17em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+img.ri {
+	position: absolute;
+	max-width: 80%;
+	top: 10%;
+	left: 10%;
+	border-radius: 3px;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.9);
+}
+
+img.ri:empty {
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color on hover */
+li a:hover {
+    background-color: #555;
+    color: white;
+}
+
+p.italic {
+	font-style: italic;
+	font-size: 12px;
+}
+
+p {
+	font-size:14px;
+}
+
+@media screen and (orientation: portrait) {
+  img.ri { max-width: 90%; }
+}
+
+@media screen and (orientation: landscape) {
+  img.ri { max-height: 90%; }
+}
+
+</style>
+</head>
 <body>
+  <ul>
+  	<li><a href="#" onclick="changeMap('basemapTopo')">Home</a></li>
+  	<li><a href="#" onclick="changeMap('canoeRoutes')" >Color</a></li>
+  	<li><a href="#" onclick="changeMap('troutStreams')">Moment</a></li>
+    <li><a href="#" onclick="changeMap('bedBreakfast')">Timer</a></li>
+  </ul>
+  <h1>LA 558 Assignment 4</h1>
+
+  <p class="italic" id="date"></p>
+  <p id="days">Number of days since the first of the year: </p>
+  <p id="dateUpdate"></p>
+  <p id="subtractDate"></p>
+  
+  <button onclick="numDays()">Check</button>
+  
+  <div class="timer"></div>
+  <p id="timer"></p>
+  
+  
 </body>
+
+<script src="../Classes/moment-with-locales.js"></script>
+<script src="../Classes/timer.js"></script>
+
+<script>
+
+//Moment
+var dateTime = moment().format('MMMM Do YYYY, h:mm:ss a');
+document.getElementById('date').innerHTML = 'Current date and time: ' + dateTime;
+
+var now = moment();//todays date
+var end = moment(1483250400000); //Jan 1, 2017
+var duration = moment.duration(now.diff(end));
+var days = duration.asDays();
+days = Math.floor(days);
+
+console.log(days)
+  
+function numDays() {
+	document.getElementById('days').innerHTML = 'Number of days since the first of the year: ' + days; 
+}
+
+//Timer
+var timer = new Timer({
+    tick : 1,
+    ontick : function (sec) {
+		document.getElementById('timer').innerHTML = sec;
+        console.log('interval', sec);
+    },
+    onstart : function() {
+        //console.log('timer started');
+		alert('timer started');
+    }
+});
+
+//moment(ms).format + ' milliseconds left'
+
+// defining options using on
+timer.on('end', function () {
+    console.log('timer ended');
+	//var timeLeft = moment.duration(sec, "seconds").humanize();
+	//console.log(timeLeft);
+    this.start(4).off('end');
+});
+
+//start timer for 10 seconds
+timer.start(10);
+            
+
+
+</script>
+
+
 </html>
