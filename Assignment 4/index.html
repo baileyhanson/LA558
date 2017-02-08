@@ -94,6 +94,9 @@ p.italic {
 p {
 	font-size:14px;
 }
+p.color {
+    width: 225px;
+}
 
 @media screen and (orientation: portrait) {
   img.ri { max-width: 90%; }
@@ -107,76 +110,83 @@ p {
 </head>
 <body>
   <ul>
-  	<li><a href="#" onclick="changeMap('basemapTopo')">Home</a></li>
-  	<li><a href="#" onclick="changeMap('canoeRoutes')" >Color</a></li>
-  	<li><a href="#" onclick="changeMap('troutStreams')">Moment</a></li>
-    <li><a href="#" onclick="changeMap('bedBreakfast')">Timer</a></li>
+  	<li><a href="https://baileyhanson.github.io/LA558/">Home</a></li>
   </ul>
   <h1>LA 558 Assignment 4</h1>
 
   <p class="italic" id="date"></p>
-  <p id="days">Number of days since the first of the year: </p>
+  <p id="days">Number of days since the first of the year:</p>
   <p id="dateUpdate"></p>
   <p id="subtractDate"></p>
   
-  <button onclick="numDays()">Check</button>
+  <button onclick="numDays(now,end)">Check</button>
+  <p>------------------------------------------------------------------</p>
+  <p></p>
+  <p></p>
+
+<p id="days2">Number of days between the two dates below:</p>
+<p>
+  Date 1: <input id="date1" type="text" name="date1" value="" size="25"><br>
+  Date 2: <input id="date2" type="text" name="date2" value="" size="25"><br>
+  <input type="submit" value="Check" onclick="numDays2()">
   
-  <div class="timer"></div>
-  <p id="timer"></p>
-  
-  
+</p> 
+
+  <p>------------------------------------------------------------------</p>
+  <p></p>
+  <p></p>
+  <p id="color" class="color"> Set the background color of this text </p>
+  <input  class="jscolor" onchange="update(this.jscolor)" value="cc66ff">
+
+
+  <p>------------------------------------------------------------------</p>
+  <p></p>
+  <p></p>
+
 </body>
 
 <script src="../Classes/moment-with-locales.js"></script>
-<script src="../Classes/timer.js"></script>
+<script src="../Classes/jscolor/jscolor.js"></script>
+<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 
 <script>
-
-//Moment
 var dateTime = moment().format('MMMM Do YYYY, h:mm:ss a');
 document.getElementById('date').innerHTML = 'Current date and time: ' + dateTime;
 
 var now = moment();//todays date
 var end = moment(1483250400000); //Jan 1, 2017
-var duration = moment.duration(now.diff(end));
-var days = duration.asDays();
-days = Math.floor(days);
 
-console.log(days)
-  
-function numDays() {
+function numDays(x,y) { 
+	var duration = moment.duration(x.diff(y));
+	var days = duration.asDays();
+	days = Math.floor(days);
 	document.getElementById('days').innerHTML = 'Number of days since the first of the year: ' + days; 
 }
 
-//Timer
-var timer = new Timer({
-    tick : 1,
-    ontick : function (sec) {
-		document.getElementById('timer').innerHTML = sec;
-        console.log('interval', sec);
-    },
-    onstart : function() {
-        //console.log('timer started');
-		alert('timer started');
-    }
-});
+var dateArray =[[2015, 2, 14, 15, 25, 50, 125],[2017, 2, 14, 15, 25, 50, 125]]; 
+var day2_format = moment(dateArray[0]).format('MMMM Do YYYY, h:mm:ss a');
+var day3_format = moment(dateArray[1]).format('MMMM Do YYYY, h:mm:ss a');
+var day2 = moment(dateArray[0]);
+var day3 = moment(dateArray[1]);
 
-//moment(ms).format + ' milliseconds left'
+document.getElementById('date1').value = day2_format;
+document.getElementById('date2').value = day3_format;
 
-// defining options using on
-timer.on('end', function () {
-    console.log('timer ended');
-	//var timeLeft = moment.duration(sec, "seconds").humanize();
-	//console.log(timeLeft);
-    this.start(4).off('end');
-});
+function numDays2() { 
+	var date1 = document.getElementById("date1").value
+	date1 = moment(date1, "MMMM Do YYYY, h:mm:ss a");
+	var date2 = document.getElementById("date2").value
+	date2 = moment(date2, "MMMM Do YYYY, h:mm:ss a");
+	var duration = moment.duration(date2.diff(date1));
+	var days = duration.asDays();
+	days = Math.floor(days);
+	document.getElementById('days2').innerHTML = 'Number of days between the two dates below: ' + days; 
+}
 
-//start timer for 10 seconds
-timer.start(10);
-            
-
+function update(jscolor) {
+    // 'jscolor' instance can be used as a string
+    document.getElementById('color').style.backgroundColor = '#' + jscolor
+}
 
 </script>
-
-
 </html>
