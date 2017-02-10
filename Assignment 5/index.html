@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2017 by bahanson
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+<meta name="description" content="[JSBIN Assignment 5]">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Assignment 5</title>
+<style id="jsbin-css">
+h1 { 
+    display: block;
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+.container {
+    position: relative;
+}
+
+.title{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    display: block;
+    font-size: 1.17em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+img.ri {
+	position: absolute;
+	max-width: 80%;
+	top: 10%;
+	left: 10%;
+	border-radius: 3px;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.9);
+}
+
+img.ri:empty {
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color on hover */
+li a:hover {
+    background-color: #555;
+    color: white;
+}
+
+p.italic {
+	font-style: italic;
+	font-size: 12px;
+}
+
+p {
+	font-size:14px;
+}
+p.color {
+    width: 225px;
+}
+
+@media screen and (orientation: portrait) {
+  img.ri { max-width: 90%; }
+}
+
+@media screen and (orientation: landscape) {
+  img.ri { max-height: 90%; }
+}
+
+</style>
+</head>
+<body>
+  <ul>
+  	<li><a href="https://baileyhanson.github.io/LA558/">Home</a></li>
+  </ul>
+  <h1>LA 558 Assignment 4</h1>
+
+  <p class="italic" id="date"></p>
+  <p id="days">Number of days since the first of the year:</p>
+ 
+    <form id="radio">
+    	<input type="radio" id="answer1" name="answer" value="correct">40<br>
+     	<input type="radio" id="answer2" name="answer" value="incorrect">45<br>
+    </form> 
+  <button onclick="numDays3()">Check</button>
+
+  <p id="answer"></p>
+  <p>------------------------------------------------------------------</p>
+  <p></p>
+<p id="days2">Number of days between the two dates below: <input id="guessDate" type="text" name="guessDate" value="10" size="10"></p>
+<p>
+  Date 1: <input id="date1" type="text" name="date1" value="" size="25"><br>
+  Date 2: <input id="date2" type="text" name="date2" value="" size="25"><br>
+  <input type="submit" value="Check" onclick="numDays2()">
+</p> 
+
+  <p>------------------------------------------------------------------</p>
+  <p></p>
+  <p></p>
+  <p id="color" class="color"> Set the background color of this text </p>
+  <input  class="jscolor" onchange="update(this.jscolor)" value="cc66ff">
+
+
+  <p>------------------------------------------------------------------</p>
+  <p></p>
+  <form>
+    <select id="dropdown" name="dropdown" onchange="mapChange()">
+      <option value="https://www.openstreetmap.org/export/embed.html?bbox=-93.6457657814026%2C41.995812248642956%2C-93.62413644790651%2C42.00831363114637&amp;layer=mapnik&amp;marker=42.002063246918674%2C-93.63495111465454">Ames Office Location</option>
+      <option value="https://www.openstreetmap.org/export/embed.html?bbox=-91.64552450180055%2C42.02025462200314%2C-91.62925958633424%2C42.03275120155912&amp;layer=mapnik&amp;marker=42.02650321883254%2C-91.63739204406738">Cedar Rapids Office Location</option>
+    </select>
+</form>
+  <p></p>
+  
+  <iframe id="map" width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-93.6457657814026%2C41.995812248642956%2C-93.62413644790651%2C42.00831363114637&amp;layer=mapnik&amp;marker=42.002063246918674%2C-93.63495111465454" style="border: 1px solid black"></iframe><br/>
+
+</body>
+
+<script src="../Classes/moment-with-locales.js"></script>
+<script src="../Classes/jscolor/jscolor.js"></script>
+<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+
+<script>
+
+function numDays3() {
+	if (document.getElementById("answer1").checked == true){
+		document.getElementById('answer').innerHTML = 'Correct!';
+	} else if (document.getElementById("answer1").checked == false){
+		document.getElementById('answer').innerHTML = 'Incorrect!';	
+	}
+
+}
+
+function mapChange() {
+   var theSelect = document.getElementById('dropdown');
+   var theIframe = document.getElementById('map');
+   var theUrl;
+ 
+   theUrl = theSelect.options[theSelect.selectedIndex].value;
+   theIframe.src = theUrl;
+}
+
+///////////////////////////
+var dateTime = moment().format('MMMM Do YYYY, h:mm:ss a');
+document.getElementById('date').innerHTML = 'Current date and time: ' + dateTime;
+
+var now = moment();//todays date
+var end = moment(1483250400000); //Jan 1, 2017
+
+function numDays(x,y) { 
+	var duration = moment.duration(x.diff(y));
+	var days = duration.asDays();
+	days = Math.floor(days);
+	document.getElementById('days').innerHTML = 'Number of days since the first of the year: ' + days; 
+}
+
+
+var duration = moment.duration(end.diff(now));
+var days = duration.asDays();
+	days = Math.floor(days);
+	
+	days = "c";
+document.getElementById('answer1').innerHTML = days; 
+
+
+
+var dateArray =[[2015, 2, 14, 15, 25, 50, 125],[2017, 2, 14, 15, 25, 50, 125]]; 
+var day2_format = moment(dateArray[0]).format('MMMM Do YYYY, h:mm:ss a');
+var day3_format = moment(dateArray[1]).format('MMMM Do YYYY, h:mm:ss a');
+var day2 = moment(dateArray[0]);
+var day3 = moment(dateArray[1]);
+
+document.getElementById('date1').value = day2_format;
+document.getElementById('date2').value = day3_format;
+
+function numDays2() { 
+	var date1 = document.getElementById("date1").value
+	date1 = moment(date1, "MMMM Do YYYY, h:mm:ss a");
+	var date2 = document.getElementById("date2").value
+	date2 = moment(date2, "MMMM Do YYYY, h:mm:ss a");
+	var duration = moment.duration(date2.diff(date1));
+	var days = duration.asDays();
+	days = Math.floor(days);
+	if (days == document.getElementById("guessDate").value) {
+		document.getElementById('days2').innerHTML = 'Correct!';
+	} else {
+		document.getElementById('days2').innerHTML = 'That is incorrect! The correct answer is ' + days;
+	}
+	
+}
+
+function update(jscolor) {
+    // 'jscolor' instance can be used as a string
+    document.getElementById('color').style.backgroundColor = '#' + jscolor
+}
+
+</script>
+</html>
