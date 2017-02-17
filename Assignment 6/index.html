@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2017 by bahanson
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+<meta name="description" content="[JSBIN Assignment 6]">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Assignment 6</title>
+<style id="jsbin-css">
+h1 { 
+    display: block;
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+.container {
+    position: relative;
+}
+
+.title{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    display: block;
+    font-size: 1.17em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+img.ri {
+	position: absolute;
+	max-width: 80%;
+	top: 10%;
+	left: 10%;
+	border-radius: 3px;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.9);
+}
+
+img.ri:empty {
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color on hover */
+li a:hover {
+    background-color: #555;
+    color: white;
+}
+
+p.italic {
+	font-style: italic;
+	font-size: 12px;
+}
+
+p {
+	font-size:14px;
+}
+p.color {
+    width: 225px;
+}
+
+@media screen and (orientation: portrait) {
+  img.ri { max-width: 90%; }
+}
+
+@media screen and (orientation: landscape) {
+  img.ri { max-height: 90%; }
+}
+
+</style>
+</head>
+<body>
+  <ul>
+  	<li><a href="https://baileyhanson.github.io/LA558/">Home</a></li>
+  </ul>
+
+<h1>LA 558 Assignment 6</h1>
+
+<h2>Element Selector</h2>
+<p>The jQuery element selector selects elements based on the element name. In this case, on button click, the h2 elements are selected and the font color is changed to blue.</p>
+<button name="blue">Blue</button>
+<button name="black">Black</button>
+<button name="red">Red</button>
+<p>------------------------------------------------------------------</p>
+
+<h2>#ID Selector</h2>
+<p id="idSelector">The jQuery #id selector uses the id attribute of an HTML tag to find the specific element. Click the button below to hide this text.</p>
+<button name="idSelectHide">Hide</button>
+<button type="button" name="idSelectShow" style="display:none" >Show</button>
+<p>------------------------------------------------------------------</p>
+
+<h2>.Class Selector</h2>
+<p class="classSelector">The jQuery .class selector finds all elements with a specific class.</p>
+<button name="fontBigger">Larger Font</button>
+<button name="fontSmaller" style="display:none" >Smaller Font</button>
+<p>------------------------------------------------------------------</p>
+
+</body>
+
+<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+
+<script>
+
+$(document).ready(function(){
+    //Element Selectors
+	$('[name="blue"]').click(function(){
+        $("h2").css('color', 'blue');
+    });
+	$('[name="black"]').click(function(){
+		$("h2").css('color', 'black');
+	});
+	$('[name="red"]').click(function(){
+		$("h2").css('color', 'red');
+	});
+	//ID Selectors
+	$('[name="idSelectHide"]').click(function(){
+		$("#idSelector").hide(300);
+		$('[name="idSelectHide"]').hide()
+		$('[name="idSelectShow"]').show();
+	});
+	$('[name="idSelectShow"]').click(function(){
+		$("#idSelector").show(300);
+		$('[name="idSelectHide"]').show();
+		$('[name="idSelectShow"]').hide();
+	});
+	//Class Selectors
+	$('[name="fontBigger"]').click(function(){
+		$(".classSelector").css('font-size', '20px');
+		$('[name="fontSmaller"]').show();
+		$('[name="fontBigger"]').hide();
+	});
+	$('[name="fontSmaller"]').click(function(){
+		$(".classSelector").css('font-size', '14px');
+		$('[name="fontSmaller"]').hide();
+		$('[name="fontBigger"]').show();
+	});
+	
+});
+
+</script>
+</html>
