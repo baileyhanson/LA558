@@ -57,6 +57,10 @@
           new ol.geom.Polygon([[[-11e6, 5e6], [-10e6, 5e6],
               [-10e6, 4e6], [-11e6, 4e6], [-11e6, 5e6]]]));		  
 	
+	  var polygonFeature3 = new ol.Feature({
+          geometry: new ol.geom.Polygon([[[-10539729.388307143, 5178971.845629443], [-10287034.144206412, 5192488.517237121], [-10280354.974758815, 5064401.047419754], [-10528597.439227814, 5059656.78801645], [-10539729.388307143, 5178971.845629443]]])
+	  });
+	
 	/*
 	//NEED TO TRANSFORM THE COORDINATES
 	  var polygonFeature = new ol.Feature({
@@ -82,14 +86,65 @@
 			  width: 3
 		  })
 	  }));
+	  
+	    
+	  polygonFeature3.setStyle(new ol.style.Style({
+		  fill: new ol.style.Fill({
+       		   color: 'grey'
+		  }),
+		  stroke: new ol.style.Stroke({
+			  color: 'black',
+			  width: 3
+		  })
+	  }));
+	  
+	      var circle = new ol.Feature({
+			geometry: new ol.geom.Point(ol.proj.fromLonLat([-96.395556, 42.498056]))
+      	});	
+		
+		  var circle2 = new ol.Feature({
+			geometry: new ol.geom.Point(ol.proj.fromLonLat([-92.346161, 42.492436]))
+      	});	
+		
+		
+		
+		circle.setStyle(new ol.style.Style({
+		  image: new ol.style.Circle({
+		  	radius: 20,
+		  	fill: new ol.style.Fill({
+				color: 'orange'
+		    })
+		  })
+		}));	
+		
+	    circle2.setStyle(new ol.style.Style({
+		  image: new ol.style.Circle({
+		  	radius: 30,
+		  	fill: new ol.style.Fill({
+				color: 'purple'
+		    })
+		  })
+		}));	
 	  // END POLYGON FEATURES
 	  
       var vectorSource = new ol.source.Vector({
-        features: [ames, cedarRapids, tiffin, polygonFeature1,  polygonFeature2]
+        features: [polygonFeature1,  polygonFeature2, polygonFeature3, circle, circle2]
       });
 
+
+      var vectorSource2 = new ol.source.Vector({
+        features: [ames, cedarRapids, tiffin]
+      });
+	  
+	  
       var vectorLayer = new ol.layer.Vector({
-        source: vectorSource
+        source: vectorSource,
+		opacity: 0.5
+      });
+	  
+	  var vectorLayer2 = new ol.layer.Vector({
+        source: vectorSource2,
+		opacity: 1
       });
 	  
       var map = new ol.Map({
@@ -97,7 +152,7 @@
         layers: [
           new ol.layer.Tile({
             source: new ol.source.OSM()
-          }), vectorLayer
+          }), vectorLayer, vectorLayer2
         ],
         view: new ol.View({
           center: ol.proj.fromLonLat([-93.622, 41.839]),
