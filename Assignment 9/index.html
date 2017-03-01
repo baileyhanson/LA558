@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.0.1/css/ol.css" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <style>
+        .map {
+            height: 400px;
+            width: 100%;
+        }
+		
+    </style>
+    <script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    
+    <title>Assignment 9</title>
+</head>
+
+<body>
+    <h2>Assignment 9</h2>
+    <div class="container-fluid">
+    
+    <div class="row-fluid">
+      <div class="span12">
+        <div id="map" class="map"><div id="popup"></div></div>
+      </div>
+    </div>
+    
+    </div>
+    <script type="text/javascript">
+	
+        // MARKERS
+        var ames = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-93.643779, 42.028792])),
+			name: 'Ames'
+        });
+
+        var cedarRapids = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-91.673069, 41.983892])),
+			name: 'Cedar Rapids'
+        });
+
+        var tiffin = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-91.667919, 41.707932])),
+			name: 'Tiffin'
+        });
+
+        ames.setStyle(new ol.style.Style({
+            image: new ol.style.Icon( /** @type {olx.style.IconOptions} */ ({
+                src: '../Classes/mapbox-maki/icons/building-15.svg'
+            }))
+        }));
+
+        cedarRapids.setStyle(new ol.style.Style({
+            image: new ol.style.Icon( /** @type {olx.style.IconOptions} */ ({
+                src: 'http://www.googlemapsmarkers.com/v1/0033cc/'
+            }))
+        }));
+
+        tiffin.setStyle(new ol.style.Style({
+            image: new ol.style.Icon( /** @type {olx.style.IconOptions} */ ({
+                src: '../Classes/mapbox-maki/icons/home-15.svg'
+            }))
+        }));
+
+        // Circle Marker
+        var circle = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-96.395556, 42.498056])),
+			name: 'Sioux City',
+			population: 82459
+        });
+
+        var circle2 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-92.35193, 42.490670])),
+		    name: 'Waterloo',
+			population: 68366
+        });
+		 var circle3 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-93.61270, 41.578913])),
+			name: 'Des Moines',
+			population: 207510
+        });
+
+        var circle4 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-90.58143, 41.556931])),
+		    name: 'Davenport',
+			population: 102157 
+        });
+        var circle5 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-90.69444, 42.508601])),
+		    name: 'Dubuque',
+			population: 58253
+        });
+		var circle6 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-94.76964, 41.252294])),
+		    name: 'Massena',
+			population: 343
+        });
+		var circle7 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-94.73610, 40.992627])),
+		    name: 'Corning',
+			population: 1586
+        });
+		var circle8 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-95.20740, 41.790492])),
+		    name: 'Irwin',
+			population: 330
+        });
+		var circle9 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-91.67418, 42.076504])),
+		    name: 'Robins',
+			population: 3345
+        });
+		var circle10 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-92.06991, 41.796632])),
+		    name: 'Marengo',
+			population: 2513
+        });
+	
+
+        circle.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 30,
+                fill: new ol.style.Fill({
+                    color: '#006d2c'
+                })
+            })
+        }));
+        circle2.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 28,
+                fill: new ol.style.Fill({
+                    color: '#31a354'
+                })
+            })
+        }));
+        circle3.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 32,
+                fill: new ol.style.Fill({
+                    color: '#006d2c'
+                })
+            })
+        })); 
+		circle4.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 30,
+                fill: new ol.style.Fill({
+                    color: '#006d2c'
+                })
+            })
+        })); 
+		circle5.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 26,
+                fill: new ol.style.Fill({
+                    color: '#31a354'
+                })
+            })
+        }));
+		circle6.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 10,
+                fill: new ol.style.Fill({
+                    color: '#bae4b3'
+                })
+            })
+        }));
+		circle7.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 14,
+                fill: new ol.style.Fill({
+                    color: '#74c476'
+                })
+            })
+        }));	
+		circle8.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 10,
+                fill: new ol.style.Fill({
+                    color: '#bae4b3'
+                })
+            })
+        }));		
+		circle9.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 20,
+                fill: new ol.style.Fill({
+                    color: '#74c476'
+                })
+            })
+        }));	
+		circle10.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 16,
+                fill: new ol.style.Fill({
+                    color: '#74c476'
+                })
+            })
+        }));			
+		
+		
+        var vectorSource = new ol.source.Vector({
+            features: [circle, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9, circle10]
+        });
+
+
+        var vectorSource2 = new ol.source.Vector({
+            features: [ames, cedarRapids, tiffin]
+        });
+
+
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            opacity: 0.75
+        });
+
+        var vectorLayer2 = new ol.layer.Vector({
+            source: vectorSource2,
+            opacity: 1
+        });
+
+        var map = new ol.Map({
+            target: document.getElementById('map'),
+			layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                }), vectorLayer, vectorLayer2
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([-93.622, 41.839]),
+                zoom: 7
+            })
+        });
+		
+		var element = document.getElementById('popup');
+
+		var popup = new ol.Overlay({
+		  element: element,
+		  positioning: 'bottom-center',
+		  stopEvent: false
+		});
+		map.addOverlay(popup);
+		
+		
+		// display popup on click
+		map.on('click', function(evt) {
+		  var feature = map.forEachFeatureAtPixel(evt.pixel,
+			  function(feature, layer) {
+				return feature;
+			  });
+		  if (feature) {
+			popup.setPosition(evt.coordinate);
+			$(element).popover({
+			  'placement': 'top',
+			  'html': true,
+			  'content': feature.get('name')
+			});
+			$(element).popover('show');
+		  } else {
+			$(element).popover('destroy');
+		  }
+		});
+		
+		// change mouse cursor when over marker
+		map.on('pointermove', function(e) {
+		  if (e.dragging) {
+			$(element).popover('destroy');
+			return;
+		  }
+		  var pixel = map.getEventPixel(e.originalEvent);
+		  var hit = map.hasFeatureAtPixel(pixel);
+		  map.getTarget().style.cursor = hit ? 'pointer' : '';
+		});		
+		
+		
+    </script>
+</body>
+
+</html>
