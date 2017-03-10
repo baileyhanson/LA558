@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.0.1/css/ol.css" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Classes/ol3-layerswitcher-master/src/ol3-layerswitcher.css" />
+    <style>
+        #home {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f1f1f1;
+        }
+        
+        #home2 {
+            float: left;
+        }
+        
+        #home2 a {
+            display: block;
+            color: #000;
+            padding: 8px 16px;
+            text-decoration: none;
+        }
+        
+        #home2 a:hover {
+            background-color: #555;
+            color: white;
+        }
+        
+        h1 {
+            display: block;
+            font-size: 2em;
+            margin-top: 0.67em;
+            margin-bottom: 0.67em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+            padding-left: 10px;
+        }
+        
+        #footer {
+            clear: both;
+            position: relative;
+            z-index: 10;
+            height: 3em;
+            margin-top: -3em;
+        }
+        
+        p {
+            font-size: 10px;
+            background-color: #f1f1f1;
+        }
+    </style>
+    <script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
+    <script src="../Classes/ol3-layerswitcher-master/src/ol3-layerswitcher.js"></script>
+
+    <title>Assignment 12</title>
+</head>
+
+<body>
+    <ul id="home">
+        <!-- need to assign ids or else layer control menu is horizontal instead of vertical-->
+        <li id="home2"><a href="https://baileyhanson.github.io/LA558/">Home</a></li>
+    </ul>
+    <h1>Assignment 12</h1>
+    <div id="map" class="map"></div>
+    <br>
+
+    <footer>
+        <p align="center">Bailey Hanson - <a href="mailto:bahanson@iastate.edu">bahanson@iastate.edu</a></p>
+    </footer>
+
+    <script type="text/javascript">
+        var geojsonObject = {
+            'type': 'FeatureCollection',
+            'crs': {
+                'type': 'name',
+                'properties': {
+                    'name': 'EPSG:3857'
+                }
+            },
+            'features': [{
+                'type': 'Feature',
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': [0, 0]
+                }
+            }, {
+                'type': 'Feature',
+                'geometry': {
+                    'type': 'Polygon',
+                    'coordinates': [
+                        [
+                            [-5e6, -1e6],
+                            [-4e6, 1e6],
+                            [-3e6, -1e6]
+                        ]
+                    ]
+                }
+            }, {
+                'type': 'Feature',
+                'geometry': {
+                    'type': 'MultiLineString',
+                    'coordinates': [
+                        [
+                            [-1e6, -7.5e5],
+                            [-1e6, 7.5e5]
+                        ],
+                        [
+                            [1e6, -7.5e5],
+                            [1e6, 7.5e5]
+                        ],
+                        [
+                            [-7.5e5, -1e6],
+                            [7.5e5, -1e6]
+                        ],
+                        [
+                            [-7.5e5, 1e6],
+                            [7.5e5, 1e6]
+                        ]
+                    ]
+                }
+            }]
+        };
+
+        // Circle Markers
+        var circle = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-96.395556, 42.498056])),
+            name: 'Sioux City',
+            population: 82459
+        });
+
+        var circle2 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-92.35193, 42.490670])),
+            name: 'Waterloo',
+            population: 68366
+        });
+        var circle3 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-93.61270, 41.578913])),
+            name: 'Des Moines',
+            population: 207510
+        });
+
+        var circle4 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-90.58143, 41.556931])),
+            name: 'Davenport',
+            population: 102157
+        });
+        var circle5 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-90.69444, 42.508601])),
+            name: 'Dubuque',
+            population: 58253
+        });
+        var circle6 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-94.76964, 41.252294])),
+            name: 'Massena',
+            population: 343
+        });
+        var circle7 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-94.73610, 40.992627])),
+            name: 'Corning',
+            population: 1586
+        });
+        var circle8 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-95.20740, 41.790492])),
+            name: 'Irwin',
+            population: 330
+        });
+        var circle9 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-91.67418, 42.076504])),
+            name: 'Robins',
+            population: 3345
+        });
+        var circle10 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-92.06991, 41.796632])),
+            name: 'Marengo',
+            population: 2513
+        });
+
+
+        circle.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 30,
+                fill: new ol.style.Fill({
+                    color: '#006d2c'
+                })
+            })
+        }));
+        circle2.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 28,
+                fill: new ol.style.Fill({
+                    color: '#31a354'
+                })
+            })
+        }));
+        circle3.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 32,
+                fill: new ol.style.Fill({
+                    color: '#006d2c'
+                })
+            })
+        }));
+        circle4.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 30,
+                fill: new ol.style.Fill({
+                    color: '#006d2c'
+                })
+            })
+        }));
+        circle5.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 26,
+                fill: new ol.style.Fill({
+                    color: '#31a354'
+                })
+            })
+        }));
+        circle6.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 10,
+                fill: new ol.style.Fill({
+                    color: '#bae4b3'
+                })
+            })
+        }));
+        circle7.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 14,
+                fill: new ol.style.Fill({
+                    color: '#74c476'
+                })
+            })
+        }));
+        circle8.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 10,
+                fill: new ol.style.Fill({
+                    color: '#bae4b3'
+                })
+            })
+        }));
+        circle9.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 20,
+                fill: new ol.style.Fill({
+                    color: '#74c476'
+                })
+            })
+        }));
+        circle10.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 16,
+                fill: new ol.style.Fill({
+                    color: '#74c476'
+                })
+            })
+        }));
+
+        var vectorSource = new ol.source.Vector({
+            features: [circle, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9, circle10]
+        });
+
+
+        var vectorSource2 = new ol.source.Vector({
+            features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
+        });
+
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            opacity: 0.75
+        });
+
+        var vectorLayer2 = new ol.layer.Vector({
+            source: vectorSource2,
+            opacity: 1
+        });
+
+        var map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Group({
+                    'title': 'Basemaps',
+                    layers: [
+                        new ol.layer.Tile({
+                            title: 'Aerial',
+                            type: 'base',
+                            visible: false,
+                            source: new ol.source.BingMaps({
+                                key: 'AqQIGe8stygnvkH7eHqXAadAm9-KvWJGZvrPdIkooZRfAB9FRUlFHPgU0njjmxSW', //Bing Maps key
+                                imagerySet: 'Aerial'
+                            })
+                        }),
+                        new ol.layer.Tile({
+                            title: 'OSM',
+                            type: 'base',
+                            visible: false,
+                            source: new ol.source.OSM()
+                        }),
+                        new ol.layer.Tile({
+                            title: 'Toner Lite',
+                            type: 'base',
+                            visible: true,
+                            source: new ol.source.Stamen({
+                                layer: 'toner-lite'
+                            })
+                        }),
+                        new ol.layer.Tile({
+                            title: 'Water Color',
+                            type: 'base',
+                            visible: false,
+                            source: new ol.source.Stamen({
+                                layer: 'watercolor'
+                            })
+                        })
+                    ]
+                }),
+                new ol.layer.Group({
+                    title: 'Overlays',
+                    layers: [
+                        new ol.layer.Tile({
+                            title: 'States',
+                            visible: true,
+                            source: new ol.source.TileWMS({
+                                url: 'http://demo.opengeo.org/geoserver/wms',
+                                params: {
+                                    'LAYERS': 'ne:ne_10m_admin_1_states_provinces_lines_shp'
+                                },
+                                serverType: 'geoserver'
+                            })
+                        }), new ol.layer.Vector({
+                            title: 'City Points',
+                            visible: false,
+                            source: vectorSource,
+                            opacity: 0.75
+                        }), new ol.layer.Vector({
+                            title: 'GeoJSON Points',
+                            visible: true,
+                            source: vectorSource2,
+                            opacity: 1
+                        })
+                    ]
+                })
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([-93.622, 41.839]),
+                zoom: 2
+            })
+        });
+
+        var layerSwitcher = new ol.control.LayerSwitcher({});
+        map.addControl(layerSwitcher);
+    </script>
+</body>
+
+</html>
