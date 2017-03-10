@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.0.1/css/ol.css" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Classes/ol3-layerswitcher-master/src/ol3-layerswitcher.css" />
+    <style>
+        h2 {
+            padding-left: 10px;
+        }
+    </style>
+    <script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
+    <script src="../Classes/ol3-layerswitcher-master/src/ol3-layerswitcher.js"></script>
+
+    <title>Assignment 11</title>
+</head>
+
+<body>
+    <h2>Assignment 11</h2>
+
+    <div id="map" class="map"></div>
+
+    <script type="text/javascript">
+        // Circle Markers
+        var circle = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-96.395556, 42.498056])),
+            name: 'Sioux City',
+            population: 82459
+        });
+
+        var circle2 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-92.35193, 42.490670])),
+            name: 'Waterloo',
+            population: 68366
+        });
+        var circle3 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-93.61270, 41.578913])),
+            name: 'Des Moines',
+            population: 207510
+        });
+
+        var circle4 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-90.58143, 41.556931])),
+            name: 'Davenport',
+            population: 102157
+        });
+        var circle5 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-90.69444, 42.508601])),
+            name: 'Dubuque',
+            population: 58253
+        });
+        var circle6 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-94.76964, 41.252294])),
+            name: 'Massena',
+            population: 343
+        });
+        var circle7 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-94.73610, 40.992627])),
+            name: 'Corning',
+            population: 1586
+        });
+        var circle8 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-95.20740, 41.790492])),
+            name: 'Irwin',
+            population: 330
+        });
+        var circle9 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-91.67418, 42.076504])),
+            name: 'Robins',
+            population: 3345
+        });
+        var circle10 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-92.06991, 41.796632])),
+            name: 'Marengo',
+            population: 2513
+        });
+
+
+        circle.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 30,
+                fill: new ol.style.Fill({
+                    color: '#006d2c'
+                })
+            })
+        }));
+        circle2.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 28,
+                fill: new ol.style.Fill({
+                    color: '#31a354'
+                })
+            })
+        }));
+        circle3.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 32,
+                fill: new ol.style.Fill({
+                    color: '#006d2c'
+                })
+            })
+        }));
+        circle4.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 30,
+                fill: new ol.style.Fill({
+                    color: '#006d2c'
+                })
+            })
+        }));
+        circle5.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 26,
+                fill: new ol.style.Fill({
+                    color: '#31a354'
+                })
+            })
+        }));
+        circle6.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 10,
+                fill: new ol.style.Fill({
+                    color: '#bae4b3'
+                })
+            })
+        }));
+        circle7.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 14,
+                fill: new ol.style.Fill({
+                    color: '#74c476'
+                })
+            })
+        }));
+        circle8.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 10,
+                fill: new ol.style.Fill({
+                    color: '#bae4b3'
+                })
+            })
+        }));
+        circle9.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 20,
+                fill: new ol.style.Fill({
+                    color: '#74c476'
+                })
+            })
+        }));
+        circle10.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 16,
+                fill: new ol.style.Fill({
+                    color: '#74c476'
+                })
+            })
+        }));
+
+        var vectorSource = new ol.source.Vector({
+            features: [circle, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9, circle10]
+        });
+
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            opacity: 0.75
+        });
+		
+        var map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Group({
+                    'title': 'Basemaps',
+                    layers: [
+                        new ol.layer.Tile({
+                            title: 'Aerial',
+                            type: 'base',
+                            visible: false,
+                            source: new ol.source.BingMaps({
+                                key: 'AqQIGe8stygnvkH7eHqXAadAm9-KvWJGZvrPdIkooZRfAB9FRUlFHPgU0njjmxSW', //Bing Maps key
+                                imagerySet: 'Aerial'
+                            })
+                        }),
+                        new ol.layer.Tile({
+                            title: 'OSM',
+                            type: 'base',
+                            visible: false,
+                            source: new ol.source.OSM()
+                        }),
+                        new ol.layer.Tile({
+                            title: 'Toner Lite',
+                            type: 'base',
+                            visible: true,
+                            source: new ol.source.Stamen({
+                                layer: 'toner-lite'
+                            })
+                        }),
+                        new ol.layer.Tile({
+                            title: 'Water Color',
+                            type: 'base',
+                            visible: true,
+                            source: new ol.source.Stamen({
+                                layer: 'watercolor'
+                            })
+                        })
+                    ]
+                }),
+                new ol.layer.Group({
+                    title: 'Overlays',
+                    layers: [
+                        new ol.layer.Tile({
+                            title: 'States',
+                            visible: true,
+                            source: new ol.source.TileWMS({
+                                url: 'http://demo.opengeo.org/geoserver/wms',
+                                params: {
+                                    'LAYERS': 'ne:ne_10m_admin_1_states_provinces_lines_shp'
+                                },
+                                serverType: 'geoserver'
+                            })
+                        }), new ol.layer.Vector({
+                            title: 'City Points',
+                            visible: false,
+                            source: vectorSource,
+                            opacity: 0.75
+                        })
+                    ]
+                })
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([-93.622, 41.839]),
+                zoom: 6
+            })
+        });
+
+        var layerSwitcher = new ol.control.LayerSwitcher({});
+        map.addControl(layerSwitcher);
+    </script>
+</body>
+
+</html>
