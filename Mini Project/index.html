@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Classes/Leaflet.awesome-markers-master/dist/leaflet.awesome-markers.css">
+    <link rel="stylesheet" href="../Classes/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="../Classes/Leaflet.awesome-markers-master/dist//leaflet.awesome-markers.js"></script>
+    <script src="../Classes/Leaflet.pattern-master/dist/leaflet.pattern-src.js"></script>
+    <script src="https://unpkg.com/esri-leaflet@2.0.8"></script>
+    <script src="simple_counties.js" type="text/javascript"></script>
+    <script src="iwalk_perry.json" type="text/javascript"></script>
+    <script src="walkscore.json" type="text/javascript"></script>
+
+    <title>
+        i-walk
+    </title>
+    <style>
+        html,
+        body,
+        #map {
+            height: 100%;
+            margin: 0px;
+        }
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 0px;
+        }
+
+        .info h4 {
+            margin: 0 0 0px;
+            color: #777;
+        }
+		
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color on hover */
+li a:hover {
+    background-color: #555;
+    color: white;
+}
+    </style>
+</head>
+
+<body>
+  <ul>
+  	<li><a href="https://baileyhanson.github.io/LA558/">Home</a></li>
+  </ul>
+  <br>
+    <button type="button" onclick="map.fitBounds(midblocks.getBounds(), {padding: [10, 10]});">Zoom to all points</button>
+    <button type="button" onclick="map.fitBounds(IowaCounties.getBounds(), {padding: [10, 10]});">Zoom to county</button>
+
+    <div id="map"></div>
+
+    <script type="text/javascript">
+        //layer control
+        var OSMbase = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+            attribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
+
+        var naip_2014_nc = L.tileLayer.wms("http://ortho.gis.iastate.edu/arcgis/services/ortho/naip_2014_nc/ImageServer/WMSServer", {
+            layers: 'naip_2014_nc',
+            format: 'image/png',
+            transparent: true,
+            attribution: "Iowa State University GIS Facility &copy; 2017, USDA National Agriculture Imagery Program 2014"
+        });
+		var esriStreets = L.esri.basemapLayer('Streets');
+		
+		var crashData = L.esri.featureLayer({url: 'https://gis.iowadot.gov/public/rest/services/Traffic_Safety/Crash_Person/FeatureServer/0'});
+		
+		
+
+        var OSM = L.tileLayer(OSMbase, {
+            attribution: attribution
+        });
+
+        var nexrad = new L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {
+            layers: 'nexrad-n0r-900913',
+            format: 'image/png',
+            transparent: true,
+            attribution: "Weather data &copy; 2017 IEM Nexrad"
+        });
+
+        var myPattern = new L.StripePattern({
+            angle: 15,
+            weight: 5,
+            opacity: 0.5
+        });
+
+        var IowaCounties = L.geoJson(simpleCounties, {
+            filter: function(feature, layer) {
+                if (feature.properties.COUNTY == 'Dallas') {
+                    return true;
+                }
+            },
+            color: 'red',
+            fillPattern: myPattern
+            /*style: function (feature) {
+                    return {
+						fillOpacity: 0.75,
+						fillPattern: myPattern
+                    };
+                },
+				*/
+        });
+
+
+        //MidBlock 
+
+        function getColorCategory(d) {
+            return d == 'Midblock' ? 'minus' :
+                'exclamation';
+        }
+
+        var midblocks = L.geoJson(iwalkPerry, {
+            filter: function(feature, layer) {
+                if (feature.properties.feature == 'Midblock') {
+                    return true;
+                }
+            },
+            pointToLayer: function(feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.AwesomeMarkers.icon({
+                        prefix: 'fa',
+                        icon: getColorCategory(feature.properties.feature),
+                        markerColor: 'cadetblue',
+                    })
+                }).on('click', function() {
+
+                    if (feature.properties.Comment_ != null) {
+                        comments = "Comments: " + feature.properties.comment + "<br>";
+                    } else {
+                        comments = '';
+                    }
+
+                    if (feature.properties.sidewalks_ != null) {
+                        sidewalks = "Sidewalks: " + feature.properties.sidewalks_ + "<br>";
+                    } else {
+                        sidewalks = '';
+                    }
+
+                    if (feature.properties.sidewalk_c != null) {
+                        sidewalkCondition = "Sidewalk condition: " + feature.properties.sidewalk_c + "<br>";
+                    } else {
+                        sidewalkCondition = '';
+                    }
+
+                    if (feature.properties.sidewalk_w != null) {
+                        sidewalkWidth = "Sidewalk width: " + feature.properties.sidewalk_w + "<br>";
+                    } else {
+                        sidewalkWidth = '';
+                    }
+
+                    if (feature.properties.sidewalk_s != null) {
+                        sidewalkSetback = "Sidewalk set back: " + feature.properties.sidewalk_s + "<br>";
+                    } else {
+                        sidewalkSetback = '';
+                    }
+
+                    if (feature.properties.parking != null) {
+                        parking = "Parking along street: " + feature.properties.parking + "<br>";
+                    } else {
+                        parking = '';
+                    }
+
+                    if (feature.properties.pleasant != null) {
+                        pleasant = "Route pleasant: " + feature.properties.pleasant + "<br>";
+                    } else {
+                        pleasant = '';
+                    }
+
+                    if (feature.properties.why_not_pl != null) {
+                        pleasantComment = "Comment: " + feature.properties.why_not_pl + "<br>";
+                    } else {
+                        pleasantComment = '';
+                    }
+
+                    if (feature.properties.street_lig != null) {
+                        streetLight = "Street lights: " + feature.properties.street_lig + "<br>";
+                    } else {
+                        streetLight = '';
+                    }
+
+                    if (feature.properties.bike_lanes != null) {
+                        Bikelanes = "Bike lanes: " + feature.properties.bike_lanes + "<br>";
+                    } else {
+                        Bikelanes = '';
+                    }
+
+                    if (feature.properties.difficult_ != null) {
+                        difficultSee = "Difficult to see or be seen: " + feature.properties.difficult_ + "<br>";
+                    } else {
+                        difficultSee = '';
+                    }
+
+                    if (feature.properties.describe_c != null) {
+                        difficultComment = "Description: " + feature.properties.describe_c + "<br>";
+                    } else {
+                        difficultComment = '';
+                    }
+
+                    htmlText = "<strong>" + feature.properties.feature + "<br>" + sidewalks + sidewalkCondition + sidewalkWidth + sidewalkSetback + parking + pleasant + streetLight + Bikelanes + difficultSee + difficultComment + comments;
+
+                    this.bindPopup(htmlText).openPopup();
+
+                });
+            },
+
+
+        });
+
+        // END  Midblick 
+        //Intersection 
+
+
+        function getColorCategory2(d) {
+            return d == 'Intersection' ? 'plus' :
+                'exclamation';
+        }
+
+        var intersections = L.geoJson(iwalkPerry, {
+            filter: function(feature, layer) {
+                if (feature.properties.feature == 'Intersection') {
+                    return true;
+                }
+            },
+            pointToLayer: function(feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.AwesomeMarkers.icon({
+                        prefix: 'fa',
+                        icon: getColorCategory2(feature.properties.feature),
+                        markerColor: 'darkpurple', //'red', 'darkred', 'orange', 'green', 'darkgreen', 'purple', 'darkpuple', 'cadetblue'
+                        //spin: getColorPhotos(feature.properties.photos)
+                    })
+                }).on('click', function() {
+
+                    if (feature.properties.Comment_ != null) {
+                        comments = "Comments: " + feature.properties.Comment_ + "<br>";
+                    } else {
+                        comments = '';
+                    }
+
+                    if (feature.properties.street_lig != null) {
+                        streetLight = "Street lights: " + feature.properties.street_lig + "<br>";
+                    } else {
+                        streetLight = '';
+                    }
+
+                    if (feature.properties.elementary != null) {
+                        elementary = "Safe for an elementary student to cross: " + feature.properties.elementary + "<br>";
+                    } else {
+                        elementary = '';
+                    }
+
+                    if (feature.properties.adult_safe != null) {
+                        adultSafe = "Safe for an adult to cross: " + feature.properties.adult_safe + "<br>";
+                    } else {
+                        adultSafe = '';
+                    }
+
+                    if (feature.properties.painted_cr != null) {
+                        paintedCross = "Painted cross walks: " + feature.properties.painted_cr + "<br>";
+                    } else {
+                        paintedCross = '';
+                    }
+
+                    if (feature.properties.traffic_co != null) {
+                        trafficControl = "Traffic controled by: " + feature.properties.traffic_co + "<br>";
+                    } else {
+                        trafficControl = '';
+                    }
+
+                    if (feature.properties.traffic__1 != null) {
+                        trafficControlOther = "Traffic controled by: " + feature.properties.traffic__1 + "<br>";
+                    } else {
+                        trafficControlOther = '';
+                    }
+
+                    if (feature.properties.pedestrian != null) {
+                        pedestrianSignage = "Pedestrian signage: " + feature.properties.pedestrian + "<br>";
+                    } else {
+                        pedestrianSignage = '';
+                    }
+
+                    if (feature.properties.pedestri_1 != null) {
+                        pedestrianSignageOther = "Pedestrian signage: " + feature.properties.pedestri_1 + "<br>";
+                    } else {
+                        pedestrianSignageOther = '';
+                    }
+
+                    if (feature.properties.crossing_g != null) {
+                        crossingGuard = "Crossing guard: " + feature.properties.crossing_g + "<br>";
+                    } else {
+                        crossingGuard = '';
+                    }
+
+                    if (feature.properties.curb_cuts != null) {
+                        curbCuts = "Curb cuts: " + feature.properties.curb_cuts + "<br>";
+                    } else {
+                        curbCuts = '';
+                    }
+
+                    if (feature.properties.curbcut_co != null) {
+                        curbCutComment = "Curb cuts comment: " + feature.properties.curbcut_co + "<br>";
+                    } else {
+                        curbCutComment = '';
+                    }
+
+                    if (feature.properties.road_too_w != null) {
+                        roadWide = "Road too wide to cross: " + feature.properties.road_too_w + "<br>";
+                    } else {
+                        roadWide = '';
+                    }
+
+                    if (feature.properties.time_to_cr != null) {
+                        timeCross = "Enough time to cross: " + feature.properties.time_to_cr + "<br>";
+                    } else {
+                        timeCross = '';
+                    }
+
+                    if (feature.properties.difficult_ != null) {
+                        difficultSee = "Difficult to see or be seen: " + feature.properties.difficult_ + "<br>";
+                    } else {
+                        difficultSee = '';
+                    }
+
+                    if (feature.properties.describe_c != null) {
+                        difficultComment = "Description: " + feature.properties.describe_c + "<br>";
+                    } else {
+                        difficultComment = '';
+                    }
+
+                    if (feature.properties.intersecti != null) {
+                        intersectionType = "Intersection type: " + feature.properties.intersecti + "-way" + "<br>";
+                    } else {
+                        intersectionType = '';
+                    }
+
+                    htmlText = "<strong>" + feature.properties.feature + "<br>" + intersectionType + trafficControl + trafficControlOther + curbCuts + curbCutComment + paintedCross + adultSafe + elementary + pedestrianSignage + pedestrianSignageOther + crossingGuard + roadWide + timeCross + difficultSee + difficultComment + streetLight + comments;
+
+                    this.bindPopup(htmlText).openPopup();
+
+                });
+            },
+
+
+        });
+
+        //End Intersection layer
+
+        //Additional Features 
+        //additional feature icons
+        function getColorCategory3(d) {
+            return d == 'Scary dog' ? 'paw' :
+                d == 'Vegetation blocking route' ? 'tree' :
+                d == 'Cracked sidewalk' ? 'exclamation-circle' :
+                d == 'Sidewalk damaged' ? 'exclamation-circle' :
+                d == 'Sidewalk ends' ? 'close' :
+                d == 'Sidewalk with stairs' ? 'exclamation-triangle' :
+                d == 'Crosswalk not at intersection' ? 'align-justify' :
+                d == 'Car blocking sidewalk' ? 'car' :
+                d == 'Bus stop' ? 'bus' :
+                d == 'Large truck traffic' ? 'truck' :
+                d == 'Bike rack' ? 'bicycle' :
+                d == 'Other' ? 'comment' :
+                'star';
+        }
+
+        var additionalFeature = L.geoJson(iwalkPerry, {
+            filter: function(feature, layer) {
+                if (feature.properties.feature == 'Additional Feature') {
+                    return true;
+                }
+            },
+            pointToLayer: function(feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.AwesomeMarkers.icon({
+                        prefix: 'fa',
+                        icon: getColorCategory3(feature.properties.additional),
+                        markerColor: 'red', //'red', 'darkred', 'orange', 'green', 'darkgreen', 'purple', 'darkpuple', 'cadetblue'
+                        //spin: getColorPhotos(feature.properties.photos)
+                    })
+
+                }).on('click', function() {
+                    if (feature.properties.Comment_ != null) {
+                        comments = feature.properties.Comment_ + "<br>";
+                    } else {
+                        comments = '';
+                    }
+
+                    if (feature.properties.addition_1 != null) {
+                        additional = feature.properties.addition_1 + "<br>";
+                    } else {
+                        additional = '';
+                    }
+
+                    htmlText = "<strong>" + feature.properties.feature + "<br>" + feature.properties.additional + "<br>" + additional + comments;
+
+                    this.bindPopup(htmlText).openPopup();
+
+                });
+            },
+
+
+        });
+
+        //End Additional Feature layer		
+
+        //walkscore
+
+        function getColor(d) {
+            return d > 90 ? '#006837' :
+                d > 80 ? '#1a9850' :
+                d > 70 ? '#66bd63' :
+                d > 60 ? '#a6d96a' :
+                d > 50 ? '#d9ef8b' :
+                d > 40 ? '#fee08b' :
+                d > 30 ? '#fdae61' :
+                d > 20 ? '#f46d43' :
+                d > 10 ? '#d73027' :
+                d >= 1 ? '#a50026' :
+                d == 0 ? '#a50026' :
+                '#888888 ';
+        }
+
+        var Walkscore = L.geoJson(walkscore, {
+            style: function(feature) {
+                return {
+                    fillColor: getColor(feature.properties.score),
+                    weight: 1,
+                    opacity: 1,
+                    color: 'gray',
+                    fillOpacity: 0.7
+                };
+            }
+
+        });
+
+        //end walkscore
+
+
+        //LAYERS AUTOMATICALLY ADDED TO MAP WHEN LOADED
+        var map = L.map('map', {
+            center: new L.LatLng(41.840107, -94.099978),
+            zoom: 14,
+            layers: [OSM, crashData]
+        });
+
+
+        //LIST OF LAYERS IN LAYER CONTROL MENU
+        //layer control
+        var baseMaps = {
+            "OpenStreetMap": OSM,
+            "Aerial Imagery": naip_2014_nc,
+			"esri Streets": esriStreets
+        };
+
+        var overlayMaps = {
+			"Crash Data": crashData,
+            "Iowa Counties": IowaCounties,
+            "Radar": nexrad,
+            "Perry Midblocks": midblocks,
+            "Perry Intersections": intersections,
+            "Perry Features": additionalFeature,
+            "Walkscore": Walkscore
+        };
+
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+        L.control.scale({
+            position: 'bottomright'
+        }).addTo(map);
+    </script>
+</body>
+
+</html>
