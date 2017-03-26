@@ -5,13 +5,13 @@
     <meta charset='utf-8' />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="../Classes/Leaflet.awesome-markers-master/dist/leaflet.awesome-markers.css">
     <link rel="stylesheet" href="../Classes/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
     <script src="../Classes/Leaflet.awesome-markers-master/dist//leaflet.awesome-markers.js"></script>
     <script src="../Classes/Leaflet.pattern-master/dist/leaflet.pattern-src.js"></script>
@@ -104,28 +104,34 @@ li a:hover {
             attribution: "Weather data &copy; 2017 IEM Nexrad"
         });
 
+        var map = L.map('map', {
+            center: new L.LatLng(41.840107, -94.099978),
+            zoom: 14,
+            layers: [OSM]//,midblocks, intersections, additionalFeature]
+        });
+
         var myPattern = new L.StripePattern({
             angle: 15,
             weight: 5,
             opacity: 0.5
-        });
-
+        }).addTo(map);
+		
         var IowaCounties = L.geoJson(simpleCounties, {
             filter: function(feature, layer) {
                 if (feature.properties.COUNTY == 'Dallas') {
                     return true;
                 }
             },
-            color: 'red',
-            fillPattern: myPattern
-            /*style: function (feature) {
-                    return {
-						fillOpacity: 0.75,
-						fillPattern: myPattern
-                    };
-                },
-				*/
-        });
+			onEachFeature: function (feature, layer) {
+	    		layer.setStyle({
+					weight: 3,
+					color: 'black',
+					//fillColor:'red',
+					fillPattern: myPattern,
+					fillOpacity: 0.5
+				});
+   			}
+		}).addTo(map);
 
 
         //MidBlock 
@@ -461,15 +467,6 @@ li a:hover {
 
         //end walkscore
 
-
-        //LAYERS AUTOMATICALLY ADDED TO MAP WHEN LOADED
-        var map = L.map('map', {
-            center: new L.LatLng(41.840107, -94.099978),
-            zoom: 14,
-            layers: [OSM, IowaCounties, midblocks, intersections, additionalFeature]
-        });
-
-
         //LIST OF LAYERS IN LAYER CONTROL MENU
         //layer control
         var baseMaps = {
@@ -487,6 +484,7 @@ li a:hover {
         };
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
+		
         L.control.scale({
             position: 'bottomright'
         }).addTo(map);

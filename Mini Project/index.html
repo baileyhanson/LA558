@@ -16,12 +16,15 @@
     <script src="../Classes/Leaflet.awesome-markers-master/dist//leaflet.awesome-markers.js"></script>
     <script src="../Classes/Leaflet.pattern-master/dist/leaflet.pattern-src.js"></script>
     <script src="https://unpkg.com/esri-leaflet@2.0.8"></script>
+    
+    <script src="https://unpkg.com/esri-leaflet-heatmap@2.0.0"></script>
+    <script src="https://rawgit.com/Leaflet/Leaflet.heat/gh-pages/dist/leaflet-heat.js"></script>
     <script src="simple_counties.js" type="text/javascript"></script>
     <script src="iwalk_perry.json" type="text/javascript"></script>
     <script src="walkscore.json" type="text/javascript"></script>
 
     <title>
-        i-walk
+        Mini Project
     </title>
     <style>
         html,
@@ -97,6 +100,10 @@ li a:hover {
 		
 		var crashData = L.esri.featureLayer({url: 'https://gis.iowadot.gov/public/rest/services/Traffic_Safety/Crash_Person/FeatureServer/0'});
 		
+		var crashDataHeat = L.esri.Heat.featureLayer({
+			url: 'https://gis.iowadot.gov/public/rest/services/Traffic_Safety/Crash_Person/FeatureServer/0',
+			radius: 12
+		});
 		
 
         var OSM = L.tileLayer(OSMbase, {
@@ -472,7 +479,7 @@ li a:hover {
         var map = L.map('map', {
             center: new L.LatLng(41.840107, -94.099978),
             zoom: 14,
-            layers: [OSM, crashData]
+            layers: [OSM, crashData, crashDataHeat]
         });
 
 
@@ -486,6 +493,7 @@ li a:hover {
 
         var overlayMaps = {
 			"Crash Data": crashData,
+			"Crash Heat Map": crashDataHeat,
             "Iowa Counties": IowaCounties,
             "Radar": nexrad,
             "Perry Midblocks": midblocks,
