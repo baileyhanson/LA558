@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
+    <script src="https://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
+
+    <script src="points.json" type="text/javascript"></script>
+
+    <title>
+        Assignment 16
+    </title>
+    <style>
+        html,
+        body,
+        #map {
+            height: 100%;
+            margin: 0px;
+        }
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 0px;
+        }
+
+        .info h4 {
+            margin: 0 0 0px;
+            color: #777;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f1f1f1;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: #000;
+            padding: 8px 16px;
+            text-decoration: none;
+        }
+        /* Change the link color on hover */
+
+        li a:hover {
+            background-color: #555;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li><a href="https://baileyhanson.github.io/LA558/">Home</a></li>
+    </ul>
+    <br>
+
+    <div id="map"></div>
+
+    <script type="text/javascript">
+        //layer control
+        var OSMbase = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+            attribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
+
+        var naip_2014_nc = L.tileLayer.wms("http://ortho.gis.iastate.edu/arcgis/services/ortho/naip_2014_nc/ImageServer/WMSServer", {
+            layers: 'naip_2014_nc',
+            format: 'image/png',
+            transparent: true,
+            attribution: "Iowa State University GIS Facility &copy; 2017, USDA National Agriculture Imagery Program 2014"
+        });
+
+        var OSM = L.tileLayer(OSMbase, {
+            attribution: attribution
+        });
+
+        var nexrad = new L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {
+            layers: 'nexrad-n0r-900913',
+            format: 'image/png',
+            transparent: true,
+            attribution: "Weather data &copy; 2017 IEM Nexrad"
+        });
+
+        var map = L.map('map', {
+            center: new L.LatLng(41.61723902224735, -93.63922119140625),
+            zoom: 11,
+            layers: [OSM] //,midblocks, intersections, additionalFeature]
+        });
+
+
+        var myPoints = [
+            [41.549700145132725, -93.65020751953125, "2"],
+            [41.606201375179474, -93.66600036621094, "3"],
+            [41.61852234700827, -93.60214233398438, "3A"],
+            [41.589769752047076, -93.64883422851562, "1"],
+            [41.58617477682803, -93.61518859863281, "5"],
+            [41.62827478065122, -93.64334106445312, "7"],
+            [41.6169823542308, -93.62754821777344, "537"],
+            [41.58309321017146, -93.68316650390625, "454"],
+            [41.56562822121977, -93.62274169921875, "176"],
+            [41.60491780527577, -93.6313247680664, "178"],
+            [41.61723902224735, -93.63922119140625, "190"],
+            [41.57590231604443, -93.61038208007812, "156"],
+            [41.585661192598415, -93.65673065185547, "210"],
+            [41.59849957273521, -93.66188049316406, "212"],
+            [41.58001149644675, -93.64368438720703, "146"],
+            [41.61082201540106, -93.60282897949219, "125"],
+            [41.59233746892924, -93.6642837524414, "174"],
+            [41.59926979434569, -93.65535736083984, "129"]
+        ];
+
+        var heatMap = L.heatLayer(myPoints, {
+            minOpacity: 0.1, //the minimum opacity the heat will start at
+            maxZoom: 19, //zoom level where the points reach maximum intensity (as intensity scales with zoom), equals maxZoom of the map by default
+            max: 1.0, //maximum point intensity, 1.0 by default
+            radius: 25, //radius of each "point" of the heatmap, 25 by default
+            blur: 15, //amount of blur, 15 by default
+            gradient: {
+				0.2: 'blue',
+				0.4: 'cyan',
+				0.6: 'green',
+				0.8: 'yellow',
+				1: 'red'
+            }	
+        }).addTo(map);
+		
+        var markers = L.markerClusterGroup();
+        var singleMarkers = L.layerGroup([]);
+
+        for (var i = 0; i < myPoints.length; i++) {
+            var a = myPoints[i];
+            var title = a[2];
+            var marker = L.marker(new L.LatLng(a[0], a[1]), {
+                title: title
+            });
+            marker.bindPopup(title);
+            markers.addLayer(marker);
+            singleMarkers.addLayer(marker);
+        }
+
+        map.addLayer(singleMarkers);
+		map.addLayer(markers);
+
+
+        //LIST OF LAYERS IN LAYER CONTROL MENU
+        //layer control
+        var baseMaps = {
+            "OpenStreetMap": OSM,
+            "Aerial Imagery": naip_2014_nc,
+        };
+
+        var overlayMaps = {
+            "Radar": nexrad,
+            "Heat Map": heatMap,
+            "Markers": singleMarkers,
+            "Cluster": markers
+        };
+
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+        L.control.scale({
+            position: 'bottomright'
+        }).addTo(map);
+    </script>
+</body>
+
+</html>
