@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://baileyhanson.github.io/LA558/Classes/Leaflet.awesome-markers-master/dist/leaflet.awesome-markers.css">
+    
+    
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+    <script src="https://baileyhanson.github.io/LA558/Classes/Leaflet.awesome-markers-master/dist/leaflet.awesome-markers.min.js"></script>	
+	<script src="https://baileyhanson.github.io/LA558/Classes/leaflet-ajax-gh-pages/dist/leaflet.ajax.min.js"></script>
+	
+	<script src="https://indicator.extension.iastate.edu/z_cjs/teachingGIS/webGIS_17/studentFeaturesDB.php?userID=bahanson&theFunction=responseVar"></script>
+    <script src="ia_counties.json"></script>
+    
+    
+    <title>
+       Assignment 18
+    </title>
+    <style>
+        html,
+        body,
+        #map {
+            height: 500px;
+            margin: 0px;
+        }
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			background-color: #f1f1f1;
+		}
+		
+		li {
+			float: left;
+		}
+		
+		li a {
+			display: block;
+			color: #000;
+			padding: 8px 16px;
+			text-decoration: none;
+		}
+
+		/* Change the link color on hover */
+		li a:hover {
+			background-color: #555;
+			color: white;
+		}
+    </style>
+</head>
+<ul>
+  	<li><a href="https://baileyhanson.github.io/LA558/">Home</a></li>
+</ul>
+<body>
+<br>
+	&nbsp;&nbsp;&nbsp; Color: <input id = 'field1'><i>(red, green, blue, or black)</i><br>
+	&nbsp;&nbsp;&nbsp; Title: <input id = 'field2'> <br>
+	&nbsp;&nbsp;&nbsp; Text: <input id = 'field3'> <br><br>
+	<input type="checkbox" id="addMarkReady" value="X"> Check box before clicking on the map to add a marker<br><br>
+<div id="map"></div>
+
+</body>
+
+<script type="text/javascript">
+       
+var userID = 'bahanson';
+
+var responseURL = "https://indicator.extension.iastate.edu/z_cjs/teachingGIS/webGIS_17/studentFeaturesDB.php?userID=" + userID + "&theFunction=response";
+console.log(responseURL);
+
+var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+});
+
+var map = L.map('map').setView([42.0, -93.634], 7);
+osm.addTo(map);
+map.on('click', addMarker);
+
+//Add the marker to the map and DB
+function addMarker(e) {
+
+  if ($("#addMarkReady").is(':checked')) {
+
+    field1 = $("#field1").val();
+    field2 = $("#field2").val();
+    field3 = $("#field3").val();
+    // Add marker to map at click location; add popup window
+    var newMarker = new L.marker(e.latlng)
+      .bindPopup("<strong>" + field2 + "</strong><br>" + field3)
+      .bindTooltip(field1)
+      .addTo(map);
+
+    latitude = e.latlng.lat;
+    longitude = e.latlng.lng;
+
+    var myData = "field1=" + field1 + "&field2=" + field2 + "&field3=" + field3 + "&latitude=" + latitude + "&longitude=" + longitude;
+
+    jQuery.ajax({
+      type: "POST", // HTTP method POST or GET
+      url: "https://indicator.extension.iastate.edu/z_cjs/teachingGIS/webGIS_17/studentFeaturesDB.php?userID=bahanson&theFunction=insert", //Where to make Ajax calls
+      dataType: "text", // Data type, HTML, json etc.
+      data: myData, //Form variables
+      success: function(response) {
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        console.log(thrownError);
+      }
+
+    }); //end ajax post
+
+  }
+
+}
+
+//*******directly via the Leaflet AJAX plugin**************
+
+var geojsonLayer2 = new L.GeoJSON.AJAX(responseURL, {
+  pointToLayer: function(feature, latlng) {
+    return new L.CircleMarker(latlng, {
+      stroke: true,
+      weight: 2, //stroke weight
+      color: '#000000', //stroke color
+      opacity: 1.0, //stoke opacity
+      fillColor: 'blue',
+      fillOpacity: 0.5,
+      radius: 10
+    }).bindPopup(feature.properties.field2).openPopup();
+  }
+});
+
+//*******as icons**************
+
+var greenIcon = L.AwesomeMarkers.icon({
+  prefix: 'fa',
+  markerColor: 'green',
+  icon: 'bullseye'
+});
+
+var redIcon = L.AwesomeMarkers.icon({
+  prefix: 'fa',
+  markerColor: 'red',
+  icon: 'bullseye'
+});
+
+var blueIcon = L.AwesomeMarkers.icon({
+  prefix: 'fa',
+  markerColor: 'blue',
+  icon: 'bullseye'
+});
+
+var whiteIcon = L.AwesomeMarkers.icon({
+  prefix: 'fa',
+  markerColor: 'black',
+  icon: 'bullseye'
+});
+
+function getIcon(d) {
+  return d == 'blue' ? blueIcon :
+    d == 'green' ? greenIcon :
+    d == 'red' ? redIcon :
+    whiteIcon;
+}
+
+var geojsonLayer2b = new L.GeoJSON.AJAX(responseURL, {
+  pointToLayer: function(feature, latlng) {
+    return L.marker(latlng, {
+        icon: getIcon(feature.properties.field1)
+      })
+      .on('mouseover', function() {
+        this.bindPopup("<strong>" + feature.properties.field2 + "</strong><br>" + feature.properties.field3).openPopup();
+      });
+  }
+}).addTo(map);
+
+var county = L.geoJson(counties, {
+	style: function (feature) {
+    	var county = feature.properties.NAME;
+        	return {
+            	fillColor: 'gray',
+                fillOpacity: 0,
+                weight: 2,
+                color: 'black'
+             };
+        },	
+}).addTo(map);
+      
+//******************
+
+//layer Control
+
+var baseMaps = {
+  "OSM": osm,
+};
+
+var overlayMaps = {
+  "IA Counties": county,
+  "Loaded with plugin": geojsonLayer2,
+  "Loaded with plugin & icons": geojsonLayer2b
+};
+
+
+L.control.layers(baseMaps, overlayMaps).addTo(map);
+</script>
+    
+</html>
