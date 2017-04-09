@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+
+    <title>
+        Assignment 19
+    </title>
+    <style>
+        html,
+        body,
+        #map {
+            height: 100%;
+            margin: 0px;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f1f1f1;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: #000;
+            padding: 8px 16px;
+            text-decoration: none;
+        }
+        /* Change the link color on hover */
+
+        li a:hover {
+            background-color: #555;
+            color: white;
+        }
+    </style>
+</head>
+<ul>
+    <li><a href="https://baileyhanson.github.io/LA558/">Home</a></li>
+</ul>
+<br>
+
+<body onload="getLocation()">
+
+<div id="map"></div>
+
+</body>
+
+<script type="text/javascript">
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            $("#myLocation").html("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function showPosition(position) {
+        map.setView(new L.LatLng(position.coords.latitude, position.coords.longitude), 12);
+        var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+        var circle = L.circle([position.coords.latitude, position.coords.longitude], {
+            color: 'blue',
+            fillColor: 'blue',
+            fillOpacity: 0.5,
+            radius: 500
+        }).addTo(map);
+    }
+
+    var map = L.map('map').setView([41.960638, -93.637359], 7);
+
+    // add an OpenStreetMap tile layer
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18
+    }).addTo(map);
+</script>
+
+</html>
