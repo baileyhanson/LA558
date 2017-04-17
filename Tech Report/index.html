@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+    <title>
+       Tech Report
+    </title>
+    <style>
+        html,
+        body,
+        #map {
+            height: 100%;
+            margin: 0px;
+        }
+				
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			background-color: #f1f1f1;
+		}
+		
+		#header {
+			float: left;
+		}
+		
+		#header a {
+			display: block;
+			color: #000;
+			padding: 8px 16px;
+			text-decoration: none;
+		}
+
+		/* Change the link color on hover */
+		#header a:hover {
+			background-color: #555;
+			color: white;
+		}
+		
+		h3{
+			padding: 10px;	
+		}
+		P {
+			padding: 10px;
+		}
+		img {
+			padding: 10px;
+		}
+		
+    </style>
+</head>
+<ul>
+  	<li id='header'><a href="https://baileyhanson.github.io/LA558/">Home</a></li>
+</ul>
+
+<h3>Sharing D3.js Code with Bl.ocks <br>
+ LA 558 Tech Report <br>
+ Bailey Hanson</h3>
+<p> This tech report is going to introduce you the technology used to share code (specifically D3.js) using GitHub Gist, and the Bl.ock viewer. Once I have introduced you to the different technology used will share the steps I took to make a bl.ock showing d3.js code of a map of Iowa. <br><br>
+
+<a href="https://d3js.org">D3.js</a> is a JavaScript library for manipulating documents based on data. D3 helps you bring data to life using HTML, <a href="https://www.w3schools.com/graphics/svg_intro.asp">SVG</a>, and CSS. D3’s emphasis on web standards gives you the full capabilities of modern browsers without tying yourself to a proprietary framework, combining powerful visualization components and a data-driven approach to DOM manipulation. <br><br>
+
+In <a href="https://github.com">GitHub</a>, Gist is used to share code. It can be a simple snippet or a full app, Gist are a great way to share you work because every Gist is a fully forkable git repository. <a href="https://bl.ocks.org">Bl.ocks</a> (pronounced “Blocks”) is a simple viewer for sharing code examples hosted on <a href="https://gist.github.com">GitHub Gist</a>.<br><br>
+
+ <a href="https://bl.ocks.org/mbostock">Mike Bostock</a>, the developer of D3.js and Bl.ocks  <a "https://bl.ocks.org/mbostock">examples</a> are particularly interesting. The D3.js library also has a huge host of <a href="https://github.com/d3/d3/wiki/Gallery">examples</a> hosted through GitHub, and bl.ocks.org. In order to share your own example without your own hosting, you can use Gist, and bl.ocks.org. The following steps will show you how to make that happen.
+</p>
+<p>
+Steps:
+</p>
+
+<ol>
+  <li> Login to your <a href="https://github.com">GitHub</a> account and go to your Gist page. Mine is <a href="https://gist.github.com/baileyhanson">https://gist.github.com/baileyhanson</a>, yours will be <a href="https://gist.github.com/"> https://gist.github.com/ </a> + your GitHub username. </li>
+  <img src="2017-04-15_20-38-09.jpg" width="500" height="300">
+  <li>Click <b>New gist</b></li>
+  <li>The first file you add should be an index file. Type <b>index.html</b> in the file name box. Then copy and paste the code you want to share. You can copy a full HTML file including CSS, and JavaScript or add the files individually. It's up to you. <em> Be sure that links to different libraries (such as d3.js) are given in absolute terms, e.g. to the official d3 site, and not to a file in your folder.</em> Keep adding files by clicking <b>Add file</b> and pasting in the code until you have supplied everything required for the graphic. In my example I only include the index.html file.</li>
+  <li>Now add a README file. Click <b>Add file</b>, and type in <b>README.md</b> and add a description of what the code and graphic you are sharing does.</li>
+  <li>Fill in a Gist description (at the top of the page) before clicking <b>Create public gist</b>.</li>
+  <img src="2017-04-13_19-01-29.jpg">  
+  <li>When the public gist is created a new page will load with the information you just entered. The end of the URL has a unique id. This unique id will be used to load the example in the bl.ocks view. My unique id is - 6ee0152df89aace50abfe627ee6c0bdc.</li>
+  <li>Go to your bl.ocks page. <a href="http://bl.ocks.org">http://bl.ocks.org/</a> + your GitHub username. Mine is <a href="http://bl.ocks.org/baileyhanson/">http://bl.ocks.org/baileyhanson/</a>. You should see your first bl.ock listed below your username.</li>
+  <li>The exact location of the bl.ock is at <a href="http://bl.ocks.org">http://bl.ocks.org/</a> + your username/your unique id. Mine is <a href="http://bl.ocks.org/baileyhanson/6ee0152df89aace50abfe627ee6c0bdc">http://bl.ocks.org/baileyhanson/6ee0152df89aace50abfe627ee6c0bdc</a>. </li>
+  <li>These are the only steps needed to share your code, but two other optional files are needed (thumbnail.png, and preview.png) if you'd like a graphic representation of the code in your bl.ocks page. The only way to add these files is through the command line. <em> The rest of these steps are for Mac only.</em></li>
+  <li>To add a thumbnail of your bl.ock to your <a href="http://bl.ocks.org/baileyhanson/">bl.ocks page</a> you first need to create a thumbnail image by taking a screen shot and cropping the image to 230px wide by 120px high. Name the image thumbnail.png and remember where it's saved.</li>
+  <li>Open Terminal on Mac</li>
+  <li>Type <em>git clone https://gist.github.com/baileyhanson/6ee0152df89aace50abfe627ee6c0bdc</em> and hit enter (you will want to use the URL to your gist created after step 5).</li>
+  <li>A folder will be created with the name of the unique id of your gist and it will contain all the files that you've uploaded to GitHub Gist. Mine is called 6ee0152df89aace50abfe627ee6c0bdc.</li>
+  <li> Copy your thumbnail.png file into your unique id folder.  If you're not sure where the folder is created, you can do a search for the unique id in Finder. </li>
+  <li> In terminal type <em>cd 6ee0152df89aace50abfe627ee6c0bdc</em> (whatever your unique id is) and hit enter.</li>
+  <li>Type <em>git add thumbnail.png</em> and hit enter.</li>
+  <li>Type <em>git commit –m 'Add thumbnail'</em> and hit enter.</li>
+  <li>Type <em>git push</em> and hit enter. Terminal should look similar to the image below when all steps are complete. </li>
+<img src="2017-04-13_21-34-46.png">  
+  <li>Check that your thumbnail was successfully added to your gist by checking the gist at <a href="https://gist.github.com/">https://gist.github.com/</a> + your username/your unique id. Mine is <a href="https://gist.github.com/baileyhanson/6ee0152df89aace50abfe627ee6c0bdc">https://gist.github.com/baileyhanson/6ee0152df89aace50abfe627ee6c0bdc</a>.</li>
+  <li>To add a preview image to the bl.ock, you will complete steps 10-19 again. Instead of creating an image that's 230px by 120px, your preview.png can be up to 960px by 680px. Complete all the terminal comands replaceing thumbnail.png with preview.png. </li>
+  <li>Add an image tag to your index.html with the correct width and hieght of your preview.png. See image below for example.</li>
+ 
+<img src="2017-04-15_20-37-16.jpg">
+  <li>Your final results should look similar to the image below.</li>
+  <img src="2017-04-15_20-43-38.jpg">
+  </ol> 
+<br>
+
+
+
+</body>
+
+<script type="text/javascript">
+       
+</script>
+    
+</html>
