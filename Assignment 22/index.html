@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+
+    <title>
+        Assignment 22
+    </title>
+    <style>
+        html,
+        body,
+        #map {
+            height: 550px;
+            margin: 0px;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f1f1f1;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: #000;
+            padding: 8px 16px;
+            text-decoration: none;
+        }
+        /* Change the link color on hover */
+
+        li a:hover {
+            background-color: #555;
+            color: white;
+        }
+		p {
+			padding: 10px;
+		}
+			
+    </style>
+</head>
+<ul>
+    <li><a href="https://baileyhanson.github.io/LA558/">Home</a></li>
+</ul>
+
+<p><b>
+turf.nearest </b>- Takes a reference point and a FeatureCollection of Features with Point geometries and returns the point from the FeatureCollection closest to the reference. This calculation is geodesic.
+<br><br><b>
+turf.distance </b>- Calculates the distance between two points in degrees, radians, miles, or kilometers. This uses the Haversine formula to account for global curvature.
+<br><br><b>
+turf.buffer </b>- Calculates a buffer for input features for a given radius. Units supported are miles, kilometers, and degrees.
+<br><br><b>
+turf.lineSlice </b>- Takes a line, a start Point, and a stop point and returns a subsection of the line in-between those points. The start and stop points don't need to fall exactly on the line. (could be useful for slicing sidewalk line segments when accessing condition or availability)
+<br><br><b>
+turf.random/turf.sample </b>- Takes a FeatureCollection and returns a FeatureCollection with given number of features at random.
+<br><br><b>
+turf.squareGrid </b>- Creates a square grid from a bounding box, Feature or FeatureCollection. (could be useful for walkscore)
+
+</p>
+
+</body>
+
+
+</html>
