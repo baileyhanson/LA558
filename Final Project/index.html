@@ -18,7 +18,7 @@
         html,
         body,
         #map {
-            height: 100%;
+            height: 520px;
             margin: 0px;
         }
 				
@@ -56,7 +56,7 @@
   	<li><a href="https://baileyhanson.github.io/LA558/">Home</a></li>
 </ul>
 <!-- works for chrome not safari -->
-<p>Select a GeoJSON file to upload to the map (.json and .geojson file extensions are accepted).</p>
+<p>Select a GeoJSON file to upload to the map (.json and .geojson file extensions are accepted). If you don't have any GeoJSON data to upload, click <a href="http://indicator.extension.iastate.edu/z_bh/LA558_FinalProject/index.php?id=5904a9fe11f76&geo=Point"> here </a> for points, <a href="http://indicator.extension.iastate.edu/z_bh/LA558_FinalProject/index.php?id=59060f8740ff7&geo=Polygon"> here </a> for polygons, and <a href="http://indicator.extension.iastate.edu/z_bh/LA558_FinalProject/index.php?id=59062a31aacc7&geo=LineString"> here </a> for lines. <a  href="LA558_FinalProject.pdf"> Final Project Presentation </a></p>
 
 <form action="upload.php" method="post" enctype="multipart/form-data">
   <input type="file" name="fileUpload" id="fileUpload" accept=".json,.geojson">
