@@ -93,7 +93,7 @@ require(["dojo/dom",
         });
 
         map = new Map("map", {
-          basemap: "streets",
+          basemap: "gray",
           center: [-93.593471,41.924430],
           zoom: 7
         });
@@ -253,6 +253,8 @@ require(["dojo/dom",
 
     <div class="details">Pick a tool and draw on the map. The drawn graphic will be buffered based on the specified parameters.</div>
 
+    <button type="button" class="tool" id="point">Point</button>
+    
     <button type="button" class="tool" id="line">Line</button>
 
     <button type="button" class="tool" id="polyline">Polyline</button>
@@ -292,6 +294,7 @@ require(["dojo/dom",
     <button type="button" id="clearGraphics">Clear Graphics</button>
 
   </div>
+  <p> Changed the map center to Iowa, and the basemap from "streets" to "gray" </p>
 
 </div>
 
